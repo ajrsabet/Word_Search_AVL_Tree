@@ -12,4 +12,13 @@ public class Word {
         this.right = null;
         this.count = 1;
     }
+
+    public String getWord() {
+        return word;
+    }
+
+    // get count
+    public int getCount() {
+        return count;
+    }
 }

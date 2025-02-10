@@ -13,6 +13,9 @@ public class WordsBST {
     }
 
     private Word insertRec(Word root, String word) {
+        // remove punctuation
+        word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        
         if (root == null) {
             root = new Word(word);
             return root;
@@ -69,6 +72,40 @@ public class WordsBST {
             return getCountRec(root.left, word);
         } else {
             return getCountRec(root.right, word);
+        }
+    }
+
+    // get Word node 
+    public Word getWord(String word) {
+        return getWordRec(root, word);
+    }
+
+    private Word getWordRec(Word root, String word) {
+        if (root == null) {
+            return null;
+        }
+
+        if (word.equals(root.word)) {
+            return root;
+        }
+
+        if (word.compareTo(root.word) < 0) {
+            return getWordRec(root.left, word);
+        } else {
+            return getWordRec(root.right, word);
+        }
+    }
+
+    // Method to print the BST in order
+    public void printTree() {
+        inOrderRec(root);
+    }
+
+    private void inOrderRec(Word root) {
+        if (root != null) {
+            inOrderRec(root.left);
+            System.out.println(root.word + " " + root.count);
+            inOrderRec(root.right);
         }
     }
 }

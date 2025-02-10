@@ -18,9 +18,9 @@ public class ProcessFile {
       try {
           File myObj = new File(filePath);
           Scanner myReader = new Scanner(myObj);
-          while (myReader.hasNextLine()) {
-              String data = myReader.nextLine();
-              System.out.println(data);
+          while (myReader.hasNext()) {
+              String data = myReader.next();
+              words.insert(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
