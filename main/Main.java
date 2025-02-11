@@ -5,8 +5,7 @@ import java.io.File;
 // import java.io.FileNotFoundException;
 // import java.lang.reflect.Type;
 
-import util.ProcessFile;
-import util.TypeWriter;
+import util.*;
 import data.*;
 
 public class Main {
@@ -14,7 +13,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         ProcessFile file = new ProcessFile();
         WordsBST words = new WordsBST();
-        // Word word = new Word("");
+        TestInput input = new TestInput();
         TypeWriter print = new TypeWriter();
         boolean exit = false;
         File[] listOfFiles = file.GetFileNames();
@@ -32,35 +31,56 @@ public class Main {
             print.SlowType("4. Print the tree");
             print.SlowType("5. Exit\n");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            int choice = input.TestInt();
+            
 
             switch (choice) {
                 case 1: // Read text from a file
                     print.SlowType("Choose a file to read:");
                     file.ListFiles(listOfFiles);
 
-                    int fileNum = scanner.nextInt();
-                    file.ReadText(words, "./files/" + listOfFiles[fileNum - 1].getName());
+                    int fileNum = input.TestInt();
+                    try {
+                        file.ReadText(words, "./files/" + listOfFiles[fileNum - 1].getName());
+                    } catch (Exception e) {
+                        print.SlowType("An error occurred, try again \n" + e);
+                    }
                     System.out.println();
                     break;
 
                 case 2: // Process text into BST
                     print.SlowType("Add text to word tree");
                     print.SlowType("What text would you like to add?");
+                    
+                    // list files in the files folder
                     file.ListFiles(listOfFiles);
-                    fileNum = scanner.nextInt();
+                    fileNum = input.TestInt();
+                    System.out.println();
                     
+                    try {
+                        searchTime = System.nanoTime(); // measure the time required to sort the words
+                        // sort the words
+                        boolean success = file.SortWords(words, "./files/" + listOfFiles[fileNum - 1].getName());
+                        searchTime = System.nanoTime() - searchTime;
+                        double searchTimeInSeconds = searchTime / 1_000_000_000.0;
 
-                    file.SortWords(words, "./files/" + listOfFiles[fileNum - 1].getName());
-                    
+                        if (success) {
+                            print.SlowType( listOfFiles[fileNum - 1] + " was added to the word tree.");
+                            print.SlowType("Number of words: " + words.countWords() + "");
+                            print.SlowType("Duration: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)\n");
+                        } else {
+                            print.SlowType("An error occurred, try again\n");
+                        }
+                    } catch (Exception e) {
+                        print.SlowType("An error occurred, try again\n" + e);
+                    }
                     System.out.println();
                     break;
 
                 case 3: // Search for word and use frequency
                     // get single word
-                    print.SlowType("Enter a word to search for:");
-                    String searchWord = scanner.nextLine(); // consume newline
+                    print.SlowType("Enter a word to search for:\n");
+                    String searchWord = input.TestLine(); // consume newline
                     
                     // measure the time required to search for the word
                     searchTime = System.nanoTime(); 
@@ -69,7 +89,7 @@ public class Main {
                     searchTime = System.nanoTime() - searchTime;
                      
                     if (thisWord != null) {
-                        print.SlowType("Word: " + searchWord);
+                        print.SlowType("\nWord: " + searchWord);
                         print.SlowType("Count: " + words.getCount(searchWord));
                         double searchTimeInSeconds = searchTime / 1_000_000_000.0;
                         print.SlowType("Time to search: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)");

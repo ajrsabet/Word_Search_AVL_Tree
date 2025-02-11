@@ -14,7 +14,7 @@ public class ProcessFile {
     public ProcessFile() {
     }
     
-    public void SortWords(WordsBST words, String filePath) {
+    public boolean SortWords(WordsBST words, String filePath) {
       try {
           File myObj = new File(filePath);
           Scanner myReader = new Scanner(myObj);
@@ -23,9 +23,11 @@ public class ProcessFile {
               words.insert(data);
             }
             myReader.close();
+            return true;
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
+            return false;
         }
     }
         

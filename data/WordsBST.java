@@ -13,8 +13,9 @@ public class WordsBST {
     }
 
     private Word insertRec(Word root, String word) {
-        // remove punctuation
-        word = word.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        // remove punctuation but keep apostrophe for contractions and possessives
+        word = word.replaceAll("[^a-zA-Z'-]", "").toLowerCase();
+
         
         if (root == null) {
             root = new Word(word);
@@ -101,11 +102,36 @@ public class WordsBST {
         inOrderRec(root);
     }
 
+    // private void inOrderRec(Word root) {
+    //     if (root != null) {
+    //         inOrderRec(root.left);
+    //         System.out.println(root.word + " " + root.count);
+    //         inOrderRec(root.right);
+    //     }
+    // }
+    private int wordCount = 0;
     private void inOrderRec(Word root) {
         if (root != null) {
             inOrderRec(root.left);
-            System.out.println(root.word + " " + root.count);
+            System.out.print(String.format("%-15s", root.word + " " + root.count));
+            wordCount++;
+            if (wordCount % 10 == 0) {
+                System.out.println();
+            }
             inOrderRec(root.right);
         }
+    }
+
+    // Method to return the number of words in the BST
+    public int countWords() {
+        return countWordsRec(root);
+    }
+
+    private int countWordsRec(Word root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return countWordsRec(root.left) + countWordsRec(root.right) + 1;
     }
 }
