@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ProcessFile file = new ProcessFile();
-        WordsBST words = new WordsBST();
+        WordsAVL words = new WordsAVL();
         TestInput input = new TestInput();
         TypeWriter print = new TypeWriter();
         boolean exit = false;
@@ -27,9 +27,12 @@ public class Main {
             print.SlowType("Please choose an option from the menu below.\n");
             print.SlowType("1. Read text from a file");
             print.SlowType("2. Create a word tree from text");
-            print.SlowType("3. Search for a word and use frequency");
-            print.SlowType("4. Print the tree");
-            print.SlowType("5. Exit\n");
+            print.SlowType("3. Add all books from the folder to the tree");
+            print.SlowType("4. Search for a word and use frequency");
+            print.SlowType("5. Print the tree");
+            print.SlowType("6. get tree stats");
+            print.SlowType("7. Balance the tree");
+            print.SlowType("8. Exit\n");
 
             int choice = input.TestInt();
             
@@ -76,8 +79,34 @@ public class Main {
                     }
                     System.out.println();
                     break;
+                
+                case 3: // Process text into BST
 
-                case 3: // Search for word and use frequency
+                    
+                    try {
+                        searchTime = System.nanoTime(); // set start time
+                        // sort the words
+                        for (int i = 0; i < listOfFiles.length; i++) {
+                            file.SortWords(words, "./files/" + listOfFiles[i].getName());
+                            
+                        }
+
+                        // duration of the sort
+                        searchTime = System.nanoTime() - searchTime;
+                        double searchTimeInSeconds = searchTime / 1_000_000_000.0;
+                        
+                        // results: 
+                        print.SlowType("All books were added to the word tree.");
+                        print.SlowType("Number of words: " + words.countWords() + "");
+                        print.SlowType("Duration: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)\n");
+
+                    } catch (Exception e) {
+                        print.SlowType("An error occurred, try again\n" + e);
+                    }
+                    System.out.println();
+                    break;
+
+                case 4: // Search for word and use frequency
                     // get single word
                     print.SlowType("Enter a word to search for:\n");
                     String searchWord = input.TestLine(); // consume newline
@@ -99,16 +128,28 @@ public class Main {
                     System.out.println();
                     break;
 
-                    case 4: // display the tree
+                    case 5: // display the tree
                     print.SlowType("Printing the tree...");
                     words.printTree();
                     System.out.println();
                     
                     break;
 
-                    case 5: // Exit
+                    
+                    case 6: // get stats of the BST
+                    print.SlowType("The tree has " + words.countWords() + " words.");
+                    print.SlowType("The tree is " + words.getHeight() + " nodes heigh.");
+                    print.SlowType("The tree is " + words.getWidth() + "nodes wide.");
+                    break;
+                    
+                    case 8: // Exit
                     print.SlowType("Exiting...");
                     exit = true;
+                    break;
+
+                    case 7: // balance the tree
+                    print.SlowType("Balancing the tree...");
+                    words.balance();
                     break;
 
                     default:
