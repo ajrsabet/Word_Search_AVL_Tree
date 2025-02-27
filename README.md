@@ -1,5 +1,5 @@
 # Text Scanner
-This project is a text scanner tool that reads text from a file, creates a word tree (binary search tree) from the text, searches for a word, and prints the tree.
+This project is a text scanner tool that reads text from a file, creates a word tree (AVL tree) from the text, searches for a word, and prints the tree.
 
 ## Features
 
