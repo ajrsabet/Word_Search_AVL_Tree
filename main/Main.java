@@ -30,13 +30,11 @@ public class Main {
             print.SlowType("3. Add all books from the folder to the tree");
             print.SlowType("4. Search for a word and use frequency");
             print.SlowType("5. Print the tree");
-            print.SlowType("6. get tree stats");
-            print.SlowType("7. Balance the tree");
-            print.SlowType("8. Exit\n");
+            print.SlowType("6. Get tree stats");
+            print.SlowType("7. Exit\n");
 
             int choice = input.TestInt();
             
-
             switch (choice) {
                 case 1: // Read text from a file
                     print.SlowType("Choose a file to read:");
@@ -51,7 +49,7 @@ public class Main {
                     System.out.println();
                     break;
 
-                case 2: // Process text into BST
+                case 2: // Process text into AVL tree
                     print.SlowType("Add text to word tree");
                     print.SlowType("What text would you like to add?");
                     
@@ -68,8 +66,8 @@ public class Main {
                         double searchTimeInSeconds = searchTime / 1_000_000_000.0;
 
                         if (success) {
-                            print.SlowType( listOfFiles[fileNum - 1] + " was added to the word tree.");
-                            print.SlowType("Number of words: " + words.countWords() + "");
+                            print.SlowType(listOfFiles[fileNum - 1] + " was added to the word tree.");
+                            print.SlowType("Number of words: " + words.countWords(words.getRoot()) + "");
                             print.SlowType("Duration: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)\n");
                         } else {
                             print.SlowType("An error occurred, try again\n");
@@ -80,15 +78,12 @@ public class Main {
                     System.out.println();
                     break;
                 
-                case 3: // Process text into BST
-
-                    
+                case 3: // Process all text files into AVL tree
                     try {
                         searchTime = System.nanoTime(); // set start time
                         // sort the words
                         for (int i = 0; i < listOfFiles.length; i++) {
                             file.SortWords(words, "./files/" + listOfFiles[i].getName());
-                            
                         }
 
                         // duration of the sort
@@ -97,7 +92,7 @@ public class Main {
                         
                         // results: 
                         print.SlowType("All books were added to the word tree.");
-                        print.SlowType("Number of words: " + words.countWords() + "");
+                        print.SlowType("Number of words: " + words.countWords(words.getRoot()) + "");
                         print.SlowType("Duration: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)\n");
 
                     } catch (Exception e) {
@@ -114,12 +109,12 @@ public class Main {
                     // measure the time required to search for the word
                     searchTime = System.nanoTime(); 
                     // search for word
-                    Word thisWord = words.getWord(searchWord);
+                    Word thisWord = words.search(searchWord);
                     searchTime = System.nanoTime() - searchTime;
                      
                     if (thisWord != null) {
                         print.SlowType("\nWord: " + searchWord);
-                        print.SlowType("Count: " + words.getCount(searchWord));
+                        print.SlowType("Count: " + words.getCount(words.getRoot(), searchWord));
                         double searchTimeInSeconds = searchTime / 1_000_000_000.0;
                         print.SlowType("Time to search: " + searchTimeInSeconds + " seconds (" + searchTime + " nanoseconds)");
                     } else {
@@ -128,37 +123,29 @@ public class Main {
                     System.out.println();
                     break;
 
-                    case 5: // display the tree
+                case 5: // Display the tree
                     print.SlowType("Printing the tree...");
-                    words.printTree();
+                    words.inOrder(words.getRoot());
                     System.out.println();
-                    
                     break;
 
-                    
-                    case 6: // get stats of the BST
-                    print.SlowType("The tree has " + words.countWords() + " words.");
-                    print.SlowType("The tree is " + words.getHeight() + " nodes heigh.");
-                    print.SlowType("The tree is " + words.getWidth() + "nodes wide.");
+                case 6: // Get stats of the AVL tree
+                    print.SlowType("The tree has " + words.countWords(words.getRoot()) + " words.");
+                    print.SlowType("The tree is " + words.height(words.getRoot()) + " nodes high.");
+                    // print.SlowType("The tree is " + words.width() + " nodes wide.");
                     break;
                     
-                    case 8: // Exit
+                case 7: // Exit
                     print.SlowType("Exiting...");
                     exit = true;
                     break;
 
-                    case 7: // balance the tree
-                    print.SlowType("Balancing the tree...");
-                    words.balance();
-                    break;
-
-                    default:
+                default:
                     print.SlowType("Invalid choice. Please try again.");
                     System.out.println();
             }
         }
 
-        
         scanner.close();
     }
 }

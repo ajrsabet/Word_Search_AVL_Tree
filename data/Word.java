@@ -1,24 +1,17 @@
 package data;
 
 public class Word {
-    String word;
+    String key;
+    int height;
+    int count;
     Word left;
     Word right;
-    int count;
-
-    public Word(String word) {
-        this.word = word;
+    
+    public Word(String key) {
+        this.key = key;
         this.left = null;
         this.right = null;
-        this.count = 1;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    // get count
-    public int getCount() {
-        return count;
+        this.height = 1; // new node is initially added at leaf
+        this.count = 1; // new node is initially added with frequency 1
     }
 }
